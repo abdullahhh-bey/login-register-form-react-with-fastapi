@@ -1,0 +1,71 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f7fa; 
+  margin: 0;
+  padding: 0;
+}
+.Main-container,
+.second-container {
+  width: 380px;
+  margin: 80px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+.Heading1 h1 {
+  color: #111827;
+  margin-bottom: 25px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.Input input {
+  width: 300px;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border: 1px solid #d1d5db; 
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+.Input input:focus {
+  border-color: #0d9488; 
+  box-shadow: 0 0 6px rgba(13, 148, 136, 0.3);
+}
+.btn-register,
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #0d9488;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-register:hover,
+.btn-login:hover {
+  background-color: #0f766e; 
+}
+.link-login,
+.link-register {
+  color: #0d9488;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.link-login:hover,
+.link-register:hover {
+  text-decoration: underline;
+}
+.Main-container p,
+.second-container p {
+  margin-top: 15px;
+  color: #374151; 
+  font-size: 14px;
+}
