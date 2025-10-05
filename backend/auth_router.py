@@ -1,0 +1,31 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+from schemas import UserInfo , UserRegister, UserLogin, ResponseLogin
+from database import get_db
+from auth_service import AuthService
+
+router = APIRouter(
+    prefix="/auth",
+    tags=["Login & Register"]
+)
+
+@router.get("/users", response_model=List[UserInfo])
+def GetUsers(db : Session = Depends(get_db)) -> List[UserInfo]:
+    service = AuthService(db)
+    u = service.getUsers()
+    return u
+
+
+@router.post("/register" , response_model=UserInfo)
+def RegisterUser( u : UserRegister , db : Session = Depends(get_db)) -> UserInfo:
+    service = AuthService(db)
+    u = service.register(u)
+    return u
+
+
+@router.post("/login" , response_model=ResponseLogin)
+def LoginUser(u : UserLogin , db : Session = Depends(get_db)) -> ResponseLogin:
+    service = AuthService(db)
+    t = service.login(u)
+    return t

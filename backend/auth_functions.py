@@ -1,6 +1,7 @@
-from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
+from passlib.context import CryptContext
+
 
 SECRET_KEY = "your-secret-key-change-this-to-something-random-and-long"
 
@@ -8,7 +9,7 @@ ALGORITHM = "HS256"
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 def hashed_password(password : str) -> str:
     return pwd_context.hash(password)
