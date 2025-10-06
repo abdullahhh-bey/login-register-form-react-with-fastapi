@@ -10,8 +10,10 @@ function Register() {
   const [status, setStatus] = useState("");
   const navigate = useNavigate(); 
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (name && email && pass) {
       try {
         const response = await apiCall.post("/register", {
@@ -19,11 +21,13 @@ function Register() {
           email,
           password: pass,
         });
+
         console.log("Server response:", response.data);
         setStatus("success");
         setName("");
         setEmail("");
         setPass("");
+        
       } catch (error) {
         console.error("Registration error:", error);
         setStatus("error");

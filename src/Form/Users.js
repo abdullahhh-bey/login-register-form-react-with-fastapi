@@ -21,13 +21,18 @@ function Users() {
   return (
     <div className="Main-container">
       <h1>All Registered Users</h1>
-      <ul>
+      <div className="row my-4 container-lg d-flex justify-content-center align-items center">
         {users.map((user, index) => (
-          <li key={index}>
-            <strong>{user.name}</strong> — {user.email}
-          </li>
+          <>
+          <div key={index} className="col-lg-4 d-flex flex-column text-center" style={{width: "23rem"}}>
+            <div className="card-body">
+              <h5 className="card-title">{user.name}</h5>
+              <p>{user.email}</p>
+            </div>
+          </div>
+          </>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
