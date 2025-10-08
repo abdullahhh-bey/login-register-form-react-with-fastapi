@@ -29,3 +29,10 @@ def LoginUser(u : UserLogin , db : Session = Depends(get_db)) -> ResponseLogin:
     service = AuthService(db)
     t = service.login(u)
     return t
+
+
+@router.post("/forgot-password")
+def ForgotPassword( email : str ,db : Session = Depends(get_db)) -> str:
+    service  = AuthService(db)
+    reset_token = service.forgotPassword(email)
+    return reset_token

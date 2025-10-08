@@ -34,6 +34,30 @@ def create_token(email : str) -> str:
 
 
 
+def create_reset_token(data : dict) -> str:
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+   
+    token = jwt.encode(data , SECRET_KEY , algorithm=ALGORITHM)
+    return token
+
+
+def verify_reset_token(token : str) -> str:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        
+        if email is None:
+            raise Exception("Invalid token")
+        
+        return email
+        
+    except JWTError:
+        raise Exception("Invalid token")
+   
+
+
+
+
 def verify_token(token : str) -> str:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

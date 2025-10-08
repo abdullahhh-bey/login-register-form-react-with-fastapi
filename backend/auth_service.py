@@ -1,4 +1,4 @@
-from auth_functions import create_token , verify_token , verify_password , hashed_password
+from auth_functions import *
 from schemas import UserRegister, UserLogin, UserInfo, ResponseLogin
 from sqlalchemy.orm import Session
 from models import User
@@ -59,3 +59,20 @@ class AuthService:
     def getUsers(self) -> List[UserInfo]:
         users = self.db.query(User).all()
         return users
+    
+    def forgotPassword(self, email : str) -> str:
+        user = self.db.query(User).filter(User.email == email).first()
+        if user is None:
+            raise HTTPException(
+                status_code=404,
+                detail="No User with this email"
+            )  
+            
+        d = {
+            "sub" : user.id,
+            "email" : user.email
+        }
+        
+        reset_token = create_reset_token(d)
+        return reset_token
+        

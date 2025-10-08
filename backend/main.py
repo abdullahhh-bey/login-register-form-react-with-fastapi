@@ -20,4 +20,11 @@ app.add_middleware(
 )
 
 
+#implement 
+# authorized users only and add 
+# forget pass/ 
+# reset pass/ 
+# email verification/
+# add real time chat for authorized users
+# add groups and punlic private groups 
 
