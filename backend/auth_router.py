@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from schemas import UserInfo , UserRegister, UserLogin, ResponseLogin
+from schemas import UserInfo , UserRegister, UserLogin, ResponseLogin, ResetPassRequest
 from database import get_db
 from auth_service import AuthService
 
@@ -36,3 +36,10 @@ def ForgotPassword( email : str ,db : Session = Depends(get_db)) -> str:
     service  = AuthService(db)
     reset_token = service.forgotPassword(email)
     return reset_token
+
+
+@router.post("/new_password")
+def newPassword(res : ResetPassRequest, db : Session = Depends(get_db)) -> str:
+    service = AuthService(db)
+    response = service.resetPassword(res)
+    return response

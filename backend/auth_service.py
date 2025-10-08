@@ -1,5 +1,5 @@
 from auth_functions import *
-from schemas import UserRegister, UserLogin, UserInfo, ResponseLogin
+from schemas import UserRegister, UserLogin, UserInfo, ResponseLogin, ResetPassRequest
 from sqlalchemy.orm import Session
 from models import User
 from fastapi import HTTPException
@@ -67,12 +67,22 @@ class AuthService:
                 status_code=404,
                 detail="No User with this email"
             )  
-            
-        d = {
-            "sub" : user.id,
-            "email" : user.email
-        }
         
-        reset_token = create_reset_token(d)
+        reset_token = create_reset_token(str(user.id) , user.email)
         return reset_token
         
+        
+    def resetPassword(self, res : ResetPassRequest) -> str:
+        id = verify_reset_token(res.token)
+        
+        if id is None:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid token!!!"
+            )
+            
+        user = self.db.query(User).filter(User.id == int(id)).first()
+        new_hash_pass = hashed_password(res.new_password)
+        user.hashed_pass = new_hash_pass
+        self.db.commit()
+        return "Password has been changed"

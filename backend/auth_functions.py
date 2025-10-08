@@ -1,7 +1,7 @@
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
-
+from fastapi import HTTPException
 
 SECRET_KEY = "your-secret-key-change-this-to-something-random-and-long"
 
@@ -34,26 +34,35 @@ def create_token(email : str) -> str:
 
 
 
-def create_reset_token(data : dict) -> str:
+def create_reset_token(id: int, email: str) -> str:
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-   
-    token = jwt.encode(data , SECRET_KEY , algorithm=ALGORITHM)
+    payload = {"sub": str(id), "email": email, "exp": expire}
+    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    print(f"🧩 Token payload before encoding: {payload}")
     return token
 
 
-def verify_reset_token(token : str) -> str:
+def verify_reset_token(token: str) -> str:
     try:
+
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
+
+        id = payload.get("sub")
+
+        if id is None:
+            raise HTTPException(
+            status_code=400,
+            detail="Invalid Token"
+        )
         
-        if email is None:
-            raise Exception("Invalid token")
+        return int(id)
         
-        return email
-        
-    except JWTError:
-        raise Exception("Invalid token")
-   
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid Token"
+        )
+
 
 
 
@@ -64,10 +73,16 @@ def verify_token(token : str) -> str:
         email = payload.get("sub")
         
         if email is None:
-            raise Exception("Invalid token")
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid token"
+            )
         
         return email
         
     except JWTError:
-        raise Exception("Invalid token")
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid Token"
+        )
     

@@ -24,3 +24,12 @@ class UserInfo(BaseModel):
    
     class Config:
         orm_mode = True
+        
+        
+class ResetPassRequest(BaseModel):
+    new_password : str
+    token : str
+    
+    class Config:
+        orm_mode = True
+        
