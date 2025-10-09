@@ -10,43 +10,42 @@ router = APIRouter(
     tags=["Login & Register"]
 )
 
+#dependency provider
+def get_authSerivce(db : Session = Depends(get_db)):
+    return AuthService(db)
+
+
 @router.get("/users", response_model=List[UserInfo])
-def GetUsers(db : Session = Depends(get_db)) -> List[UserInfo]:
-    service = AuthService(db)
+def GetUsers(service : AuthService = Depends(get_authSerivce) ,db : Session = Depends(get_db)) -> List[UserInfo]:
     u = service.getUsers()
     return u
 
 
 @router.post("/register")
-async def RegisterUser( u : UserRegister , db : Session = Depends(get_db)) -> str:
-    service = AuthService(db)
+async def RegisterUser(u : UserRegister ,service : AuthService = Depends(get_authSerivce) , db : Session = Depends(get_db)) -> str:
     u = await service.register(u)
     return u
 
 
 @router.post("/login" , response_model=ResponseLogin)
-def LoginUser(u : UserLogin , db : Session = Depends(get_db)) -> ResponseLogin:
-    service = AuthService(db)
+def LoginUser( u : UserLogin , service : AuthService = Depends(get_authSerivce), db : Session = Depends(get_db)) -> ResponseLogin:
     t = service.login(u)
     return t
 
 
 
 @router.post("/forgot-password")
-def ForgotPassword( email : str ,db : Session = Depends(get_db)) -> str:
-    service  = AuthService(db)
+def ForgotPassword( email : str, service : AuthService = Depends(get_authSerivce) ,db : Session = Depends(get_db)) -> str:
     reset_token = service.forgotPassword(email)
     return reset_token
 
 
 @router.post("/new_password")
-def newPassword(res : ResetPassRequest, db : Session = Depends(get_db)) -> str:
-    service = AuthService(db)
+def newPassword(res : ResetPassRequest, service : AuthService = Depends(get_authSerivce) , db : Session = Depends(get_db)) -> str:
     response = service.resetPassword(res)
     return response
 
 @router.post("/verify")
-def verifyEmail(token : str, db : Session = Depends(get_db)):
-    service = AuthService(db)
+def verifyEmail(token : str, service : AuthService = Depends(get_authSerivce) , db : Session = Depends(get_db)):
     res = service.email_verification(token)
     return res
