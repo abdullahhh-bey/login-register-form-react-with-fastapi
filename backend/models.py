@@ -9,6 +9,7 @@ class User(Base):
     name = Column(String , nullable=False)
     email = Column(String(255),index=True , nullable=False, unique=True)
     hashed_pass = Column(String, nullable=False)
+    is_verified = Column(Boolean , default=False)
 
 Base.metadata.create_all(bind=engine)
 

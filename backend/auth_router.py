@@ -17,10 +17,10 @@ def GetUsers(db : Session = Depends(get_db)) -> List[UserInfo]:
     return u
 
 
-@router.post("/register" , response_model=UserInfo)
-def RegisterUser( u : UserRegister , db : Session = Depends(get_db)) -> UserInfo:
+@router.post("/register")
+async def RegisterUser( u : UserRegister , db : Session = Depends(get_db)) -> str:
     service = AuthService(db)
-    u = service.register(u)
+    u = await service.register(u)
     return u
 
 
@@ -29,6 +29,7 @@ def LoginUser(u : UserLogin , db : Session = Depends(get_db)) -> ResponseLogin:
     service = AuthService(db)
     t = service.login(u)
     return t
+
 
 
 @router.post("/forgot-password")
@@ -43,3 +44,9 @@ def newPassword(res : ResetPassRequest, db : Session = Depends(get_db)) -> str:
     service = AuthService(db)
     response = service.resetPassword(res)
     return response
+
+@router.post("/verify")
+def verifyEmail(token : str, db : Session = Depends(get_db)):
+    service = AuthService(db)
+    res = service.email_verification(token)
+    return res

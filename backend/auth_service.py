@@ -4,13 +4,14 @@ from sqlalchemy.orm import Session
 from models import User
 from fastapi import HTTPException
 from typing import List
+from email_functions import *
 
 class AuthService:
     
     def __init__(self , db : Session):
         self.db = db
         
-    def register(self , user : UserRegister) -> UserInfo:
+    async def register(self , user : UserRegister) -> str:
         userCheck = self.db.query(User).filter(User.email == user.email).first()
         if userCheck:
             raise HTTPException(
@@ -28,7 +29,10 @@ class AuthService:
         self.db.add(new_user)
         self.db.commit()
         self.db.refresh(new_user)
-        return new_user
+        
+        token = create_token(new_user.email)
+        await email_sending_service(token , new_user.email)
+        return "User successfully registeered but needs verification\nEmail has been sent to you with verification token."
     
     
     def login(self , user : UserLogin) -> ResponseLogin:
@@ -86,3 +90,22 @@ class AuthService:
         user.hashed_pass = new_hash_pass
         self.db.commit()
         return "Password has been changed"
+    
+    
+    def email_verification(self, token : str) -> str:
+        email = verify_token(token)
+        user = self.db.query(User).filter(User.email == email).first()
+        if user is None:
+            raise HTTPException(
+                status_code=400,
+                detail="No User exist"
+            )
+        if user.is_verified == True:
+            raise HTTPException(
+                status_code=400,
+                detail="User already verified"
+            )
+            
+        user.is_verified = True
+        self.db.commit()
+        return "User verified successfully\nNow, you can login"
