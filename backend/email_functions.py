@@ -1,11 +1,10 @@
-from fastapi import HTTPException
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 
 #configurations
 connect = ConnectionConfig(
     MAIL_USERNAME="abdullahamirr9@gmail.com",
     MAIL_PASSWORD="ggbowcuqlyrxyrtc", 
-    MAIL_FROM="abdullahamirr9@gmail.com",
+    MAIL_FROM="abdullahamirr9@gmail.com", 
     MAIL_PORT=587,
     MAIL_SERVER="smtp.gmail.com",
     MAIL_STARTTLS=True,
