@@ -8,6 +8,7 @@ function Register() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [status, setStatus] = useState("");
+  const [token , setToken] = useState("")
   const navigate = useNavigate(); 
 
 
@@ -37,16 +38,7 @@ function Register() {
     }
   };
 
-  if (status === "success") {
-    return (
-      <div className="Main-container">
-        <h1 className="success-text">🎉 User Successfully Registered!</h1>
-        <button className="btn-login" onClick={() => navigate("/")}>
-          Go to Login
-        </button>
-      </div>
-    );
-  }
+
 
   if (status === "error") {
     return (
@@ -58,6 +50,41 @@ function Register() {
       </div>
     );
   }
+
+
+  if (status === "success") {
+  return (
+    <div className="Main-container">
+      <h1 className="success-text">🎉 User Registered!</h1>
+      <p>Check your email for a verification token.</p>
+
+      <input
+        type="text"
+        placeholder="Paste verification token here"
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+      />
+      <button
+        onClick={async () => {
+          if(!token){
+            alert("Token cant be null")
+          }
+          try {
+            const res = await apiCall.post(`/verify-email?token=${token}`);
+            alert(res.data);
+            navigate("/login");
+          } catch (err) {
+            alert(err.response?.data?.detail || "Verification failed");
+          }
+        }}
+      >
+        Verify Email
+      </button>
+    </div>
+  );
+}
+
+
 
   return (
     <div className="Main-container">

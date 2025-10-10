@@ -46,7 +46,7 @@ def newPassword(res : ResetPassRequest, service : AuthService = Depends(get_auth
     return response
 
 
-@router.post("/verify")
+@router.post("/verify-email")
 def verifyEmail(token : str, service : AuthService = Depends(get_authSerivce) , db : Session = Depends(get_db)):
     res = service.email_verification(token)
     return res
