@@ -76,6 +76,7 @@ class AuthService:
         return reset_token
         
         
+        
     def resetPassword(self, res : ResetPassRequest) -> str:
         id = verify_reset_token(res.token)
         

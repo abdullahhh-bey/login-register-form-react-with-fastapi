@@ -33,3 +33,8 @@ class ResetPassRequest(BaseModel):
     class Config:
         orm_mode = True
         
+class ForgotPasswordDto(BaseModel):
+    email : str
+    
+    class Config:
+        orm_mode = True

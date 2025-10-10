@@ -6,7 +6,7 @@ import "./Form.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const navigate = useNavigate(); // ✅ initialize navigation
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +53,9 @@ function Login() {
         <br />
         <button className="btn-login">Login</button>
       </form>
+      <p className="forgot-pass link-register" onClick={() => navigate("/forgot-password")}>
+        Forgot Password?
+      </p>
 
       <p>
         Don’t have an account?{" "}
@@ -60,6 +63,7 @@ function Login() {
           Register
         </span>
       </p>
+
     </div>
   );
 }
