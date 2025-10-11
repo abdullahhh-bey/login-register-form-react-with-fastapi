@@ -28,8 +28,18 @@ class User(Base):
     )
     
     def following(self):
-        
-        
+        sent = [c.friend for c in self.sent_contacts]
+        print(sent)
+        return sent
+    
+    def followers(self):
+        friends = [c.user for c in self.received_contacts]
+        print(friends)
+        return friends
+    
+    def all_friends(self):
+        return self.followers() + self.following() 
+    
 
 class Contact(Base):
     __tablename__ = "contacts"
