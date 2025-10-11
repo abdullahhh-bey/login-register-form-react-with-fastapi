@@ -38,3 +38,8 @@ class ForgotPasswordDto(BaseModel):
     
     class Config:
         orm_mode = True
+        
+        
+class AddContactDTO(BaseModel):
+    user_email : str = Field(...)
+    friend_email : str = Field(...)

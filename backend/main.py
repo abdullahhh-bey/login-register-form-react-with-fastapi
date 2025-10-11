@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from auth_router import router
+from userRouter import UserRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 app.include_router(router)
+app.include_router(UserRouter)
 
 
 origins = [
