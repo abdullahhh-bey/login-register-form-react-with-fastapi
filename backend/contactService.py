@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from models import User, Contact
 from fastapi import HTTPException, status
-from schemas import AddContactDTO
+from schemas import AddContactDTO,UserInfo
 
 
 def add_contact(db: Session, req : AddContactDTO):
@@ -26,12 +26,20 @@ def add_contact(db: Session, req : AddContactDTO):
     db.add(contact)
     db.commit()
     db.refresh(contact)
-    return {"message": f"{friend.name} added as contact for {user.name}"}
+    return {"message": f"{friend.name} added as FRIEND for {user.name}"}
 
 
 def get_contacts(db: Session, user_email: str):
     user = db.query(User).filter(User.email == user_email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
-    return user.allFriends()
+    
+    users = user.all_friends()
+    
+    u = [UserInfo(
+        name = u.name,
+        id = u.id,
+        email = u.email
+    ) for u in users]
+    
+    return u

@@ -19,4 +19,9 @@ def AddContact(contact : AddContactDTO, db : Session = Depends(get_db)):
 @ContactRouter.get("/")
 def GetFriendsByUser(email : str, db : Session = Depends(get_db)):
     result = get_contacts(db, email)
+    if len(result) == 0:
+        return {
+            "message" : "He dont have any Friends"
+        }
+        
     return result   
