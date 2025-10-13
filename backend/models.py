@@ -1,7 +1,7 @@
 from database import Base, engine
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, UniqueConstraint, DateTime
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
-
+from datetime import datetime, time
 
 class User(Base):
     
@@ -53,6 +53,36 @@ class Contact(Base):
     user = relationship("User", foreign_keys=[user_id], back_populates="sent_contacts")
     friend = relationship("User", foreign_keys=[friend_id], back_populates="received_contacts")
     
+    
+    
+class Chat(Base):
+    
+    __tablename__= "chats"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    Is_group = Column(Boolean, nullable=True, default=False)
+    Chat_name = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    
+class Message(Base):
+    
+    __tablename__ = "messages"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(String, nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    chat_id = Column(Integer, ForeignKey("chats.id") ,nullable=False)
+    
+
+class ChatMembers(Base):
+    
+    __tablename__ = "chat_members"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    chat_id = Column(Integer, ForeignKey("chats.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)    
+
 
 Base.metadata.create_all(bind=engine)
 
