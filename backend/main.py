@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from auth_router import router
 from userRouter import UserRouter
 from contactRouter import ContactRouter
+from chatRouter import ChatRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -9,7 +10,7 @@ app = FastAPI()
 app.include_router(router)
 app.include_router(UserRouter)
 app.include_router(ContactRouter)
-
+app.include_router(ChatRouter)
 
 origins = [
     "http://localhost:3000"
