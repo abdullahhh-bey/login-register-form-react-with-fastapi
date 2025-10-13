@@ -50,7 +50,7 @@ class AddContactDTO(BaseModel):
 class AddChatInfo(BaseModel):
     is_group: bool = Field(..., description="True if group chat, False for private chat")
     name: str | None = Field(None, description="Name for group chat; optional for private chat")
-    users_email: List[EmailStr] = Field(..., description="List of user emails to include in the chat")
+    user_email: List[EmailStr] = Field(..., description="List of user emails to include in the chat")
 
 
 class ChatWithUsers(BaseModel):

@@ -11,17 +11,18 @@ class ChatService:
         
  
     def create_chat(self, chat_data: AddChatInfo) -> ChatWithUsers:
-        if not chat_data.users_emails or len(chat_data.users_emails) == 0:
+        if not chat_data.user_email or len(chat_data.user_email) == 0:
             raise HTTPException(
                 status_code=400, 
                 detail="At least one user must be provided"
             )
 
-        users = self.db.query(User).filter(User.email.in_(chat_data.users_emails)).all()
-        if len(users) != len(chat_data.users_emails):
+        users = self.db.query(User).filter(User.email.in_(chat_data.user_email)).all()
+        if len(users) != len(chat_data.user_email):
             found_emails = [u.email for u in users]
-            missing = list(set(chat_data.users_emails) - set(found_emails))
+            missing = list(set(chat_data.user_email) - set(found_emails))
             raise HTTPException(status_code=404, detail=f"Users not found: {missing}")
+
 
         if chat_data.is_group:
             if not chat_data.name:
@@ -42,8 +43,8 @@ class ChatService:
 
         return ChatWithUsers(
             id=chat.id,
-            is_group=chat.is_group,
-            group_name=chat.name,
+            is_group=chat.Is_group,
+            group_name=chat.Chat_name,
             users=[u.email for u in users],
             group_created_at=chat.created_at,
         )
@@ -66,8 +67,8 @@ class ChatService:
         return [
             ChatWithUsers(
                 id=c.id,
-                is_group=c.is_group,
-                group_name=c.name,
+                is_group=c.Is_group,
+                group_name=c.Chat_name,
                 users=[m.user.email for m in c.members],
                 group_created_at=c.created_at,
             )
