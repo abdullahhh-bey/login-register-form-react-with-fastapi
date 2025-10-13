@@ -9,7 +9,67 @@ class ChatService:
     def __init__(self, db : Session):
         self.db = db
         
-    def addChat(self, chat : AddChatInfo):
-        
-        
-    
+ 
+    def create_chat(self, chat_data: AddChatInfo) -> ChatWithUsers:
+        if not chat_data.users_emails or len(chat_data.users_emails) == 0:
+            raise HTTPException(
+                status_code=400, 
+                detail="At least one user must be provided"
+            )
+
+        users = self.db.query(User).filter(User.email.in_(chat_data.users_emails)).all()
+        if len(users) != len(chat_data.users_emails):
+            found_emails = [u.email for u in users]
+            missing = list(set(chat_data.users_emails) - set(found_emails))
+            raise HTTPException(status_code=404, detail=f"Users not found: {missing}")
+
+        if chat_data.is_group:
+            if not chat_data.name:
+                raise HTTPException(status_code=400, detail="Group chat must have a name")
+        else:
+            if len(users) != 2:
+                raise HTTPException(status_code=400, detail="Private chat must have exactly 2 users")
+
+        chat = Chat(Chat_name=chat_data.name, Is_group=chat_data.is_group)
+        self.db.add(chat)
+        self.db.commit()
+        self.db.refresh(chat)
+
+        for user in users:
+            member = ChatMember(chat_id=chat.id, user_id=user.id)
+            self.db.add(member)
+        self.db.commit()
+
+        return ChatWithUsers(
+            id=chat.id,
+            is_group=chat.is_group,
+            group_name=chat.name,
+            users=[u.email for u in users],
+            group_created_at=chat.created_at,
+        )
+
+
+
+            
+    def get_user_all_chats(self,user_email: str):
+        user = self.db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        chats = (
+            self.db.query(Chat)
+            .join(ChatMember)
+            .filter(ChatMember.user_id == user.id)
+            .all()
+        )
+
+        return [
+            ChatWithUsers(
+                id=c.id,
+                is_group=c.is_group,
+                group_name=c.name,
+                users=[m.user.email for m in c.members],
+                group_created_at=c.created_at,
+            )
+            for c in chats
+        ]
