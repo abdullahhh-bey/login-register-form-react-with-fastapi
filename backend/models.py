@@ -90,8 +90,8 @@ class ChatMember(Base):
     __tablename__ = "chat_members"
     
     id = Column(Integer, primary_key=True, index=True)
-    chat_id = Column(Integer, ForeignKey("chats.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)    
+    chat_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
 
     chat = relationship("Chat", back_populates="members")
     user = relationship("User", back_populates="chat_memberships")

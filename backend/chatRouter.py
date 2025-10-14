@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from schemas import AddChatInfo,  ChatInfo, ChatWithUsers
+from schemas import AddChatInfo,  ChatInfo, ChatWithUsers, AddUserInChat
 from database import get_db
 from chatService import ChatService
 
@@ -27,3 +27,9 @@ def addChatsAPI(chat : AddChatInfo, service : ChatService = Depends(getChatServi
 def getChatsAPI( user_email : str , service : ChatService = Depends(getChatService)):
     user_chats = service.get_user_all_chats(user_email)
     return user_chats
+
+
+@ChatRouter.post("/users")
+def addUsersInChat( data : AddUserInChat, service : ChatService = Depends(getChatService)):
+    response = service.add_user_in_chat(data)
+    return response

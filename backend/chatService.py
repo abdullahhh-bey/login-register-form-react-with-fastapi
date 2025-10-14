@@ -96,4 +96,15 @@ class ChatService:
             missing = list(set(data.user_email) - set(found_emails))
             raise HTTPException(status_code=404, detail=f"Users not found: {missing}")
 
-        chat_users 
+        existing_members = self.db.query(ChatMember).filter(ChatMember.chat_id == data.chat_id).all()
+        existing_user_ids = {m.user_id for m in existing_members}
+
+        new_users = [u for u in users if u.id not in existing_user_ids]
+        #EXISTING USERS
+        existing_users = [u for u in users if u.id in existing_user_ids]
+
+        for user in new_users:
+            self.db.add(ChatMember(chat_id=data.chat_id, user_id=user.id))
+
+        self.db.commit()
+        return f"Users added in the {chat.Chat_name} Group"
