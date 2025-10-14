@@ -74,3 +74,26 @@ class ChatService:
             )
             for c in chats
         ]
+
+
+    def add_user_in_chat(self, data : AddUserInChat):
+        chat = self.db.query(Chat).filter(Chat.id == data.chat_id).first()
+        if chat is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Chat dont exist"
+            )
+            
+        if chat.Is_group is False:
+            raise HTTPException(
+                status_code=400,
+                detail="Private chat can only have 2 members"
+            )
+        
+        users = self.db.query(User).filter(User.email.in_(data.user_email)).all()
+        if len(users) != len(data.user_email):
+            found_emails = [u.email for u in users]
+            missing = list(set(data.user_email) - set(found_emails))
+            raise HTTPException(status_code=404, detail=f"Users not found: {missing}")
+
+        chat_users 

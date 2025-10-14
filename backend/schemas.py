@@ -64,6 +64,13 @@ class ChatWithUsers(BaseModel):
         orm_mode = True
         
         
+
+class AddUserInChat(BaseModel):
+    chat_id : int = Field(...)
+    user_email: List[EmailStr] = Field(..., description="List of user emails to include in the chat")
+
+
+        
 class ChatInfo(BaseModel):
     id : int
     Is_group : bool
