@@ -80,3 +80,10 @@ class ChatInfo(BaseModel):
     class Config:
         orm_mode = True
         
+
+class AddMessage(BaseModel):
+    chat_id : int = Field(...)
+    content : str = Field(...)
+    owner_id : int = Field(...)
+    
+    
