@@ -7,7 +7,7 @@ from messageService import MessageService
 
 
 MessageRouter = APIRouter(
-    prefix="/messages",
+    prefix="/chats/messages",
     tags=["Messages"]
 )
 
@@ -22,3 +22,7 @@ def sendMessageAPI(data : AddMessage , service : MessageService = Depends(getMes
     res = service.sendMessage(data)
     return res
 
+@MessageRouter.get("/")
+def getMessagesAPI(chat_id : int , service : MessageService = Depends(getMessageService)):
+    res = service.getMessages(chat_id)
+    return res
