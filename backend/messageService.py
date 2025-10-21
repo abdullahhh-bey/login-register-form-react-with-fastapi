@@ -2,6 +2,7 @@ from schemas import *
 from fastapi import HTTPException
 from models import *
 from sqlalchemy.orm import Session
+from typing import List
 
 class MessageService():
     def __init__(self, db : Session):
@@ -34,3 +35,16 @@ class MessageService():
         
         return message
             
+            
+    def getMessages(self, id : int) -> List[ResponseMessage]:
+        chat = self.db.query(Chat).filter(Chat.id == id).first()
+        if chat is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Chat don't exist"
+            )
+           
+        messages = self.db.query(Message).filter(Message.chat_id == id).all()
+        return messages
+         
+        
