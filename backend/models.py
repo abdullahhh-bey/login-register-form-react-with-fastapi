@@ -12,6 +12,8 @@ class User(Base):
     email = Column(String(255),index=True , nullable=False, unique=True)
     hashed_pass = Column(String, nullable=False)
     is_verified = Column(Boolean , default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 
     chat_memberships = relationship("ChatMember", back_populates="user", cascade="all, delete-orphan")
     messages_sent = relationship("Message", back_populates="owner", cascade="all, delete-orphan")
@@ -80,6 +82,7 @@ class Message(Base):
     content = Column(String, nullable=False)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     chat_id = Column(Integer, ForeignKey("chats.id") ,nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
     
     chat = relationship("Chat", back_populates="messages")
     owner = relationship("User", back_populates="messages_sent")
@@ -95,7 +98,6 @@ class ChatMember(Base):
 
     chat = relationship("Chat", back_populates="members")
     user = relationship("User", back_populates="chat_memberships")
-
 
 Base.metadata.create_all(bind=engine)
 
