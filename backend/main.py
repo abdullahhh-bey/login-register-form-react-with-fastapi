@@ -11,7 +11,7 @@ from middlewares.rateLimitingMiddleware import RateLimitingMiddleware
 app = FastAPI()
 
 app.add_middleware(LoggingMiddleware)
-app.add_middleware(RateLimitingMiddleware, 3, 15)
+app.add_middleware(RateLimitingMiddleware)
 
 app.include_router(router)
 app.include_router(UserRouter)

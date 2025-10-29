@@ -6,10 +6,8 @@ import time
 
 #It will implement rate limiting middleware in every request
 class RateLimitingMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, max_requests: int, window_seconds: int):
+    def __init__(self, app):
         super().__init__(app)
-        self.max_requests = max_requests
-        self.window = window_seconds
         self.requests = {} 
 
     async def dispatch(self, request, call_next):
@@ -17,9 +15,9 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
         now = time.time()
 
         times = self.requests.get(ip, [])
-        times = [t for t in times if now - t < self.window]
+        times = [t for t in times if now - t < 10]
 
-        if len(times) >= self.max_requests:
+        if len(times) >= 3:
             return JSONResponse(
                 {"message": "Too many requests, try again later"},
                 status_code=429
