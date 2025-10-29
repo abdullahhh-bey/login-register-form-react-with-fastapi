@@ -11,6 +11,9 @@ class ConnectionManager:
             self.active_connections[chat_id] = set()
         self.active_connections[chat_id].add(websocket)
 
+
+
+
     def disconnect(self, chat_id: int, websocket: WebSocket):
         if chat_id in self.active_connections:
             self.active_connections[chat_id].discard(websocket)
