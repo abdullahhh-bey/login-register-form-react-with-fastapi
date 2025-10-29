@@ -11,7 +11,7 @@ UserRouter = APIRouter(
 )
 
 @UserRouter.get("/")
-def getUserByEmail( email : str , db : Session = Depends(get_db)):
+def getUserByEmail( email : str, db : Session = Depends(get_db)):
     user = get_user_by_email(db, email)
     if user is None:
         raise HTTPException(

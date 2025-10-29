@@ -12,6 +12,7 @@ ChatRouter = APIRouter(
 )
 
 
+
 #dependency provider
 def getChatService(db : Session = Depends(get_db)):
     return ChatService(db)

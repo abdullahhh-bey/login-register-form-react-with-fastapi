@@ -7,11 +7,29 @@ from messageRouter import MessageRouter
 from fastapi.middleware.cors import CORSMiddleware
 from middlewares.loggingMiddleware import LoggingMiddleware
 from middlewares.rateLimitingMiddleware import RateLimitingMiddleware 
+from fastapi.responses import JSONResponse
+from fastapi.requests import Request
 
 app = FastAPI()
 
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(RateLimitingMiddleware)
+
+
+
+@app.exception_handler(Exception)
+async def globalexceptionhandler(request : Request, exc : Exception):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": {
+                "code" : 500,
+                "message" : "Internal server error",
+                "detail" : str(exc)
+            }
+        }
+    ) 
+
 
 app.include_router(router)
 app.include_router(UserRouter)
