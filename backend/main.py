@@ -5,8 +5,13 @@ from contactRouter import ContactRouter
 from chatRouter import ChatRouter
 from messageRouter import MessageRouter
 from fastapi.middleware.cors import CORSMiddleware
+from middlewares.loggingMiddleware import LoggingMiddleware
+from middlewares.rateLimitingMiddleware import RateLimitingMiddleware 
 
 app = FastAPI()
+
+app.add_middleware(LoggingMiddleware)
+app.add_middleware(RateLimitingMiddleware, 3, 15)
 
 app.include_router(router)
 app.include_router(UserRouter)
