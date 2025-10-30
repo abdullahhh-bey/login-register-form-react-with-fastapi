@@ -16,7 +16,7 @@ app.add_middleware(LoggingMiddleware)
 app.add_middleware(RateLimitingMiddleware)
 
 
-
+#created a glibal exception handler
 @app.exception_handler(Exception)
 async def globalexceptionhandler(request : Request, exc : Exception):
     return JSONResponse(

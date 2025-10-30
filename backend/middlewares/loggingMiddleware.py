@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
 
-#It stores the log, method info, path, user ip
+#It prints the log, method info, path, user ip
 # it also stores the repsonse headers, executes the latency and headers
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
