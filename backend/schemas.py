@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
+from typing import List, Optional
+from datetime import datetime
 
 class UserRegister(BaseModel):
     
@@ -43,3 +45,54 @@ class ForgotPasswordDto(BaseModel):
 class AddContactDTO(BaseModel):
     user_email : str = Field(...)
     friend_email : str = Field(...)
+    
+ 
+class AddChatInfo(BaseModel):
+    is_group: bool = Field(..., description="True if group chat, False for private chat")
+    name: str | None = Field(None, description="Name for group chat; optional for private chat")
+    user_email: List[EmailStr] = Field(..., description="List of user emails to include in the chat")
+
+
+class ChatWithUsers(BaseModel):
+    id: int
+    is_group: bool
+    group_name: str | None
+    users: List[str]
+    group_created_at: datetime
+
+    class Config:
+        orm_mode = True
+        
+        
+
+class AddUserInChat(BaseModel):
+    chat_id : int = Field(...)
+    user_email: List[EmailStr] = Field(..., description="List of user emails to include in the chat")
+
+
+        
+class ChatInfo(BaseModel):
+    id : int
+    Is_group : bool
+    Chat_name : str
+    created_at : datetime
+    
+    class Config:
+        orm_mode = True
+        
+
+
+class AddMessage(BaseModel):
+    chat_id : int = Field(...)
+    content : str = Field(...)
+    owner_id : int = Field(...)
+    
+    
+class ResponseMessage(BaseModel):
+    content : str
+    owner_id : int
+
+    class Config:
+        orm_mode = True
+        
+        
